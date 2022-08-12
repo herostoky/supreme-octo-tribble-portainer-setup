@@ -1,0 +1,27 @@
+version: '2'
+services:
+    portainer-service:
+        image: portainer/portainer
+        container_name: local-portainer-service
+        restart: on-failure:5
+        command: --admin-password-file /tmp/portainer_password
+        ports: 
+            - 8666:8000
+            - 9666:9000
+        volumes:
+            - ./portainer_password:/tmp/portainer_password
+            - /var/run/docker.sock:/var/run/docker.sock
+            - portainer-data:/data
+        networks:
+            portainer-network:
+                ipv4_address: 172.3.0.2
+        # password : superpassword
+networks:
+    portainer-network:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 172.3.0.0/16
+                  gateway: 172.3.0.1
+volumes: 
+    portainer-data:
